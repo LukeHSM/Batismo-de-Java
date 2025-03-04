@@ -7,55 +7,63 @@ import java.util.Scanner;
  * */
 
 public class Main {
+    static int count = 0;
+    static Scanner entrada = new Scanner(System.in);
+
     static void separador(){
-        System.out.println("==================================================================================");
+        System.out.println("\n==================================================================================");
     }
     static void mostrarNinjas(String[] arr){
-        int count = 0;
         separador();
-        for(String nj: arr){
-            if(nj==null) count++;
-            else System.out.println(nj);
+
+        // Verifica se o índice não está vazio e printa o valor.
+        for(int i=0; i < arr.length; i++){
+            if(arr[i] != null) System.out.printf("Ninja %d: %s.%n", i+1, arr[i]);
         }
 
-        if(count==arr.length) System.out.println("Nenhum ninja cadastrado!");
-        else if (count > 0 && count < arr.length) System.out.println("\nHouve um total de " + count + " espaçado(s) não empreechido(s)");
-
+        // Verificando a quantidade de elementos e mostrando para o usuário.
+        if(count == 0){System.out.println("\nNenhum ninja cadastrado!");}
+        else if(count > 0 && count < arr.length){System.out.println("\nHá um total de " + (arr.length - count) + " espaçado(s) não empreechido(s)");}
         separador();
-
     }
 
-    static void cadastro(String[] arr){
-        Scanner entrada = new Scanner(System.in);
-        int count = 0;
+    static void cadastro(String[] arr, int qntd){
+        separador();
 
-        System.out.println("\nDigite \"END\" quando quiser parar o cadastro.\n");
-        while (count < arr.length){
-            if(arr[count]==null) {
-                System.out.printf("Você %d espaço(s) restante(s)!%n", arr.length - count);
-                System.out.printf("Insira o nome do ninja %d: ", count+1);
-                String nome = entrada.nextLine();
+        if(count != qntd){
+            System.out.println("\nDigite \"END\" quando quiser parar o cadastro.\n");
 
-                if (nome.equalsIgnoreCase("end")) {
-                    System.out.println("\nFIM DO CADASTRO!");
-                    break;
+            while (count < qntd) {
+
+                // Verifica se o slot estiver vazio...
+                // Útil se vc interrompeu o cadastro antes e está continuando agora.
+                if (arr[count] == null) {
+                    System.out.printf("Você tem %d espaço(s) restante(s)!%n", arr.length - count);
+                    System.out.printf("Insira o nome do ninja %d: ", count + 1);
+                    String nome = entrada.nextLine();
+                    System.out.println();
+
+                    // Se digitar 'end', acaba o cadastro, por enquanto.
+                    if (nome.equalsIgnoreCase("end")) {
+                        System.out.println("\nFIM DO CADASTRO!");
+                        break;
+                    } else { // Se digitar qualquer outra coisa, adiciona na array.
+                        arr[count] = nome;
+                        count++;
+                    }
                 } else {
-                    arr[count] = nome;
                     count++;
                 }
-            }else {
-                count++;
             }
-        }
+        }else System.out.println("\nA lista já está completa!");
         separador();
     }
 
-    public static void main(String[] args) {
-        Scanner entrada = new Scanner(System.in);
-        System.out.print("Insira o tamanho da lista de ninjas: ");
-        int tamanho = entrada.nextInt(); entrada.nextLine();
+    static void mostrarMenu(){
 
-        String[] ListaNinjas = new String[tamanho];
+        System.out.print("Digite a quantidade de ninjas a serem cadastrados: ");
+        int limite = entrada.nextInt();
+        String[] ListaNinjas = new String[limite];
         boolean cond = true;
 
         while(cond){
@@ -68,10 +76,14 @@ public class Main {
             int escolha = entrada.nextInt(); entrada.nextLine();
 
             switch (escolha){
-                case 1: cadastro(ListaNinjas); break;
+                case 1: cadastro(ListaNinjas, limite); break;
                 case 2: mostrarNinjas(ListaNinjas); break;
-                case 3: System.out.println("Adeus!"); cond = false; break;
+                case 3: System.out.println("\nAdeus!"); cond = false; break;
             }
         }
+    }
+
+    public static void main(String[] args) {
+        mostrarMenu();
     }
 }
